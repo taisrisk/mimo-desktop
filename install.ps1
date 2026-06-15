@@ -107,24 +107,23 @@ if (Test-Path "$SRC_DIR\.git") {
 Write-Step "Installing dependencies..."
 Set-Location $SRC_DIR
 bun install
+if ($LASTEXITCODE -ne 0) {
+    Write-Warn "Some postinstall scripts failed — continuing anyway"
+}
 Write-Ok "Dependencies installed"
 
-# ── 6. Build backend ─────────────────────────────────────────
-
-Write-Step "Building backend engine..."
-bun --cwd packages/opencode build
-Write-Ok "Backend built"
-
-# ── 7. Build desktop app ─────────────────────────────────────
+# ── 6. Build desktop app (builds backend automatically via prebuild) ──
 
 Write-Step "Building desktop app..."
 bun --cwd packages/desktop build
+if ($LASTEXITCODE -ne 0) { Write-Fail "Desktop build failed — check the output above" }
 Write-Ok "Desktop app built"
 
-# ── 8. Package ────────────────────────────────────────────────
+# ── 7. Package ────────────────────────────────────────────────
 
 Write-Step "Packaging for Windows..."
 bun --cwd packages/desktop package:win
+if ($LASTEXITCODE -ne 0) { Write-Fail "Packaging failed — check the output above" }
 Write-Ok "Package created"
 
 # ── 9. Install ────────────────────────────────────────────────

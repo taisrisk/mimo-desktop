@@ -11,7 +11,7 @@
     "dev:web": "bun --cwd packages/app dev",
     "lint": "oxlint",
     "typecheck": "bun turbo typecheck",
-    "postinstall": "bun run --cwd packages/opencode fix-node-pty",
+    "postinstall": "bun run --cwd packages/opencode fix-node-pty || true",
     "build:desktop": "bun --cwd packages/desktop build",
     "package:desktop": "bun --cwd packages/desktop package",
     "test": "echo 'do not run tests from root' && exit 1"

@@ -130,29 +130,23 @@ fi
 
 step "Installing dependencies..."
 cd "$SRC_DIR"
-bun install 2>&1 | tail -1
+bun install || warn "Some postinstall scripts failed — continuing anyway"
 ok "Dependencies installed"
 
-# ── 6. Build the backend ─────────────────────────────────────
-
-step "Building backend engine..."
-bun --cwd packages/opencode build 2>&1 | tail -3
-ok "Backend built"
-
-# ── 7. Build the desktop app ─────────────────────────────────
+# ── 6. Build the desktop app (builds backend automatically via prebuild) ──
 
 step "Building desktop app..."
-bun --cwd packages/desktop build 2>&1 | tail -3
+bun --cwd packages/desktop build || fail "Desktop build failed — check the output above"
 ok "Desktop app built"
 
-# ── 8. Package the app ───────────────────────────────────────
+# ── 7. Package the app ───────────────────────────────────────
 
 step "Packaging for ${os}-${arch}..."
 
 if [ "$os" = "mac" ]; then
-  bun --cwd packages/desktop package:mac 2>&1 | tail -5
+  bun --cwd packages/desktop package:mac || fail "Packaging failed — check the output above"
 elif [ "$os" = "linux" ]; then
-  bun --cwd packages/desktop package:linux 2>&1 | tail -5
+  bun --cwd packages/desktop package:linux || fail "Packaging failed — check the output above"
 fi
 ok "Package created"
 

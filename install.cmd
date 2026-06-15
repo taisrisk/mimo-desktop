@@ -75,27 +75,29 @@ if exist "%SRC_DIR%\.git" (
 
 :: ── 5. Install dependencies ─────────────────────────────────
 
-echo [5/8] Installing dependencies...
+echo [5/7] Installing dependencies...
 cd /d "%SRC_DIR%"
 call bun install
 echo   [OK] Dependencies installed
 
-:: ── 6. Build backend ────────────────────────────────────────
+:: ── 6. Build desktop app (builds backend automatically via prebuild) ──
 
-echo [6/8] Building backend engine...
-call bun --cwd packages/opencode build
-echo   [OK] Backend built
-
-:: ── 7. Build desktop app ────────────────────────────────────
-
-echo [7/8] Building desktop app...
+echo [6/7] Building desktop app...
 call bun --cwd packages/desktop build
+if errorlevel 1 (
+    echo   [X] Desktop build failed - check output above
+    exit /b 1
+)
 echo   [OK] Desktop app built
 
-:: ── 8. Package and install ──────────────────────────────────
+:: ── 7. Package and install ──────────────────────────────────
 
-echo [8/8] Packaging and installing...
+echo [7/7] Packaging and installing...
 call bun --cwd packages/desktop package:win
+if errorlevel 1 (
+    echo   [X] Packaging failed - check output above
+    exit /b 1
+)
 echo   [OK] Package created
 
 :: Find and run the NSIS installer

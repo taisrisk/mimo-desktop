@@ -1,0 +1,4 @@
+[install]
+# Use copyfile instead of hardlinks on Windows — prevents stub packages in .bun/
+# that break Node.js CJS resolution (electron-builder, etc.)
+backend = "copyfile"

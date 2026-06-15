@@ -229,11 +229,18 @@ export default function FileTree(props: {
     const dirs = new Set<string>()
 
     for (const item of allowed) {
-      const parts = item.split("/")
-      const parents = parts.slice(0, -1)
-      for (const [idx] of parents.entries()) {
-        const dir = parents.slice(0, idx + 1).join("/")
-        if (dir) dirs.add(dir)
+      let current = item
+      while (true) {
+        // ⚡ Bolt: Use `lastIndexOf` and string slicing instead of array splits and joins
+        // to minimize object allocations and speed up parsing.
+        const idx = current.lastIndexOf("/")
+        if (idx === -1) break
+        current = current.slice(0, idx)
+        if (!current) continue
+        // ⚡ Bolt: Early exit! If a directory is already in the set, all of its ancestors
+        // are guaranteed to be there too. This prevents redundant checks.
+        if (dirs.has(current)) break
+        dirs.add(current)
       }
     }
 

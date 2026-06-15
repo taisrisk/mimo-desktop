@@ -4,8 +4,13 @@
   "version": "0.1.0",
   "type": "module",
   "license": "MIT",
+  "description": "AI-powered desktop coding assistant",
   "homepage": "https://github.com/taisrisk/mimo-desktop",
-  "author": "taisrisk",
+  "author": {
+    "name": "taisrisk",
+    "email": "mehatelife6162@gmail.com",
+    "url": "https://github.com/taisrisk"
+  },
   "scripts": {
     "typecheck": "tsgo -b",
     "predev": "bun ./scripts/predev.ts",

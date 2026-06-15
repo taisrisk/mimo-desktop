@@ -54,7 +54,7 @@ refs/
 target/
 a.out
 *.pid
-opencode.json
+/opencode.json
 
 # Electron / Desktop builds
 packages/desktop/dist/

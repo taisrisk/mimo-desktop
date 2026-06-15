@@ -107,14 +107,20 @@
     "printWidth": 120
   },
   "trustedDependencies": [
+    "@mimo-ai/cli",
+    "@parcel/watcher",
+    "@tailwindcss/oxide",
+    "aws-sdk",
+    "electron",
+    "electron-winstaller",
     "esbuild",
+    "msgpackr-extract",
     "node-pty",
     "protobufjs",
     "tree-sitter",
     "tree-sitter-bash",
     "tree-sitter-powershell",
-    "web-tree-sitter",
-    "electron"
+    "web-tree-sitter"
   ],
   "overrides": {
     "@types/bun": "catalog:",

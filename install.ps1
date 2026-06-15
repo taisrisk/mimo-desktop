@@ -106,6 +106,8 @@ if (Test-Path "$SRC_DIR\.git") {
 
 Write-Step "Installing dependencies..."
 Set-Location $SRC_DIR
+# Remove stale node_modules so Bun uses copyfile backend (avoids .bun/ stubs on Windows)
+if (Test-Path "node_modules") { Remove-Item "node_modules" -Recurse -Force }
 bun install
 if ($LASTEXITCODE -ne 0) {
     Write-Warn "Some postinstall scripts failed — continuing anyway"

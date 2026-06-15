@@ -130,7 +130,7 @@ fi
 
 step "Installing dependencies..."
 cd "$SRC_DIR"
-bun install || warn "Some postinstall scripts failed — continuing anyway"
+bun install --ignore-scripts || warn "Some postinstall scripts failed — continuing anyway"
 ok "Dependencies installed"
 
 # ── 6. Build the desktop app (builds backend automatically via prebuild) ──

@@ -47,7 +47,7 @@ const getBase = (): Configuration => ({
     gatekeeperAssess: false,
     entitlements: "resources/entitlements.plist",
     entitlementsInherit: "resources/entitlements.plist",
-    notarize: true,
+    notarize: process.env.APPLE_ID ? true : false,
     target: ["dmg", "zip"],
   },
   dmg: {

@@ -43,20 +43,22 @@ const migrations = await Promise.all(
 )
 console.log(`Loaded ${migrations.length} migrations`)
 
-await Bun.build({
-  target: "node",
-  entrypoints: ["./src/node.ts"],
-  outdir: "./dist/node",
-  format: "esm",
-  sourcemap: "linked",
-  external: ["jsonc-parser", "@lydell/node-pty"],
-  define: {
-    OPENCODE_MIGRATIONS: JSON.stringify(migrations),
-    OPENCODE_CHANNEL: `'${Script.channel}'`,
-  },
-  files: {
-    "opencode-web-ui.gen.ts": "",
-  },
-})
+// Write constants for electron-vite to consume as defines.
+// We skip Bun.build() here because Bun's bundler on Windows can't follow
+// Windows directory junction points (node_modules/.bun/ stubs). Instead,
+// electron-vite's Rollup (Node.js) does the actual bundling — it handles
+// junctions correctly.
+await fs.promises.mkdir("./dist/node", { recursive: true })
+await fs.promises.writeFile(
+  "./dist/node/constants.json",
+  JSON.stringify({ migrations, channel: Script.channel }),
+)
+
+// Write a pass-through entry that electron-vite's Rollup will bundle.
+// Rollup runs on Node.js which follows junctions, resolving all npm packages.
+await fs.promises.writeFile(
+  "./dist/node/node.js",
+  `export * from "../../src/node.ts"\n`,
+)
 
 console.log("Build complete")

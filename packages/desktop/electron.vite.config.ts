@@ -1,6 +1,11 @@
 import { defineConfig } from "electron-vite"
 import appPlugin from "@mimo-ai/app/vite"
 import * as fs from "node:fs/promises"
+import { readFileSync } from "node:fs"
+import path from "node:path"
+import { fileURLToPath } from "node:url"
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
 
 const channel = (() => {
   const raw = process.env.MIMO_CHANNEL
@@ -8,7 +13,21 @@ const channel = (() => {
   return "dev"
 })()
 
-const MIMO_SERVER_DIST = "../opencode/dist/node"
+// Read the constants written by build-node.ts so we can pass them as defines.
+// These are needed because OPENCODE_MIGRATIONS and OPENCODE_CHANNEL are declared
+// as global constants in the opencode source and must be replaced at bundle time.
+const MIMO_SERVER_DIST = path.resolve(__dirname, "../opencode/dist/node")
+let opencodeConstants: { migrations: unknown[]; channel: string } = {
+  migrations: [],
+  channel: "local",
+}
+try {
+  opencodeConstants = JSON.parse(
+    readFileSync(path.join(MIMO_SERVER_DIST, "constants.json"), "utf-8"),
+  )
+} catch {
+  // constants.json not present yet (first-time build); defaults used
+}
 
 const nodePtyPkg = `@lydell/node-pty-${process.platform}-${process.arch}`
 
@@ -16,6 +35,9 @@ export default defineConfig({
   main: {
     define: {
       "import.meta.env.MIMO_CHANNEL": JSON.stringify(channel),
+      // Opencode global constants — replaced at bundle time
+      OPENCODE_MIGRATIONS: JSON.stringify(opencodeConstants.migrations),
+      OPENCODE_CHANNEL: JSON.stringify(opencodeConstants.channel),
     },
     build: {
       rollupOptions: {
@@ -36,6 +58,17 @@ export default defineConfig({
         enforce: "pre",
         resolveId(id) {
           if (id === "virtual:mimo-server") return this.resolve(`${MIMO_SERVER_DIST}/node.js`)
+        },
+      },
+      {
+        // Provide an empty module for the embedded web UI (Electron uses the proxy fallback).
+        name: "mimo:virtual-web-ui",
+        enforce: "pre",
+        resolveId(id) {
+          if (id === "opencode-web-ui.gen.ts") return "\0opencode-web-ui-virtual"
+        },
+        load(id) {
+          if (id === "\0opencode-web-ui-virtual") return "export default {}"
         },
       },
       {

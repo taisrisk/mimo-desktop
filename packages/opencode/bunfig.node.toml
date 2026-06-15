@@ -1,0 +1,3 @@
+# Minimal config for building the Node.js bundle for Electron.
+# No preloads — avoids loading @opentui/solid/preload which pulls in
+# @babel/core via CJS, triggering Bun's stub package resolution bug on Windows.

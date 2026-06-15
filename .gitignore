@@ -1,0 +1,81 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+out/
+ts-dist/
+*.tsbuildinfo
+*.bun-build
+
+# Bun
+bun.lock
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# IDE
+.vscode/
+.idea/
+.zed/
+*.swp
+*.swo
+*~
+Session.vim
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Dev artifacts
+.dev-home/
+.mimocode/
+.mimo-worktrees/
+.claude/
+.codex/
+.serena/
+.sst/
+.turbo/
+.worktrees/
+.direnv/
+.scripts/
+opencode-dev/
+playground/
+tmp/
+result/
+refs/
+target/
+a.out
+*.pid
+opencode.json
+
+# Electron / Desktop builds
+packages/desktop/dist/
+release/
+*.dmg
+*.exe
+*.AppImage
+*.deb
+*.rpm
+*.snap
+*.msi
+*.blockmap
+
+# SST
+sst-env.d.ts
+
+# Experiment
+experiment/
+
+# Leftover source dir
+mimocode-src/
+
+# Misc
+UPCOMING_CHANGELOG.md

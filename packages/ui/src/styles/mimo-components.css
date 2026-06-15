@@ -1,0 +1,711 @@
+/*
+ * Mimo Desktop — Premium UI Overrides
+ * Replaces blocky OpenCode borders with fluid, minimalist, Claude-inspired aesthetic.
+ * Applies on top of the base theme; does not break any component logic.
+ */
+
+/* ─── Global Typography ───────────────────────────────────────────────────── */
+:root {
+  --mimo-radius: 10px;
+  --mimo-radius-sm: 6px;
+  --mimo-radius-xs: 4px;
+  --mimo-transition: 150ms cubic-bezier(0.4, 0, 0.2, 1);
+  --mimo-shadow-subtle:
+    0 1px 2px rgba(0, 0, 0, 0.04),
+    0 1px 4px rgba(0, 0, 0, 0.04);
+  --mimo-shadow-float:
+    0 4px 16px rgba(0, 0, 0, 0.08),
+    0 1px 4px rgba(0, 0, 0, 0.06);
+  --mimo-shadow-elevated:
+    0 8px 32px rgba(0, 0, 0, 0.12),
+    0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+/* ─── Scrollbars — invisible until hover ─────────────────────────────────── */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: transparent transparent;
+}
+*:hover {
+  scrollbar-color: rgba(128, 128, 128, 0.25) transparent;
+}
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 4px;
+  transition: background var(--mimo-transition);
+}
+*:hover::-webkit-scrollbar-thumb {
+  background: rgba(128, 128, 128, 0.25);
+}
+
+/* ─── Sidebar ─────────────────────────────────────────────────────────────── */
+[data-component="sidebar"],
+.mimo-sidebar {
+  border-right: 1px solid var(--border-weak-base, rgba(0, 0, 0, 0.06)) !important;
+  background: var(--background-weak, #f8f7f5) !important;
+}
+.dark [data-component="sidebar"],
+.dark .mimo-sidebar {
+  border-right-color: rgba(255, 255, 255, 0.04) !important;
+  background: rgba(255, 255, 255, 0.015) !important;
+}
+
+/* ─── Session / Chat Containers ──────────────────────────────────────────── */
+[data-component="message"],
+.mimo-message {
+  border-radius: var(--mimo-radius) !important;
+  border: none !important;
+  box-shadow: none !important;
+  transition: background var(--mimo-transition) !important;
+}
+
+[data-component="message-user"],
+.mimo-message-user {
+  background: var(--surface-base) !important;
+  border-radius: var(--mimo-radius) !important;
+  padding: 12px 16px !important;
+}
+
+[data-component="message-assistant"],
+.mimo-message-assistant {
+  background: transparent !important;
+  padding: 4px 0 !important;
+}
+
+/* ─── Prompt Input ────────────────────────────────────────────────────────── */
+[data-component="prompt-input"],
+.mimo-prompt-input {
+  border: 1px solid var(--border-base, rgba(0, 0, 0, 0.1)) !important;
+  border-radius: var(--mimo-radius) !important;
+  background: var(--background-strong, #fff) !important;
+  box-shadow: var(--mimo-shadow-subtle) !important;
+  transition:
+    border-color var(--mimo-transition),
+    box-shadow var(--mimo-transition) !important;
+}
+[data-component="prompt-input"]:focus-within,
+.mimo-prompt-input:focus-within {
+  border-color: var(--primary, #f59e0b) !important;
+  box-shadow:
+    0 0 0 3px rgba(245, 158, 11, 0.12),
+    var(--mimo-shadow-subtle) !important;
+}
+.dark [data-component="prompt-input"],
+.dark .mimo-prompt-input {
+  border-color: rgba(255, 255, 255, 0.07) !important;
+  background: rgba(255, 255, 255, 0.03) !important;
+}
+.dark [data-component="prompt-input"]:focus-within,
+.dark .mimo-prompt-input:focus-within {
+  border-color: var(--primary, #f59e0b) !important;
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15) !important;
+}
+
+/* ─── Buttons ─────────────────────────────────────────────────────────────── */
+[data-component="button"],
+.mimo-button {
+  border-radius: var(--mimo-radius-sm) !important;
+  border: none !important;
+  transition:
+    background var(--mimo-transition),
+    opacity var(--mimo-transition),
+    transform var(--mimo-transition) !important;
+  font-weight: 450 !important;
+}
+[data-component="button"]:active,
+.mimo-button:active {
+  transform: scale(0.97) !important;
+}
+[data-component="button-primary"],
+.mimo-button-primary {
+  background: var(--primary, #f59e0b) !important;
+  color: #fff !important;
+}
+[data-component="button-primary"]:hover,
+.mimo-button-primary:hover {
+  opacity: 0.92 !important;
+}
+
+/* ─── Cards / Panels ─────────────────────────────────────────────────────── */
+[data-component="card"],
+.mimo-card {
+  border-radius: var(--mimo-radius) !important;
+  border: 1px solid var(--border-weak-base, rgba(0, 0, 0, 0.06)) !important;
+  box-shadow: var(--mimo-shadow-subtle) !important;
+}
+.dark [data-component="card"],
+.dark .mimo-card {
+  border-color: rgba(255, 255, 255, 0.05) !important;
+  box-shadow: none !important;
+}
+
+/* ─── Dialogs / Modals ────────────────────────────────────────────────────── */
+[data-component="dialog-content"],
+.mimo-dialog {
+  border-radius: 16px !important;
+  border: none !important;
+  box-shadow: var(--mimo-shadow-elevated) !important;
+  overflow: hidden !important;
+}
+.dark [data-component="dialog-content"],
+.dark .mimo-dialog {
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.06),
+    var(--mimo-shadow-elevated) !important;
+}
+
+/* ─── Dropdowns / Menus ───────────────────────────────────────────────────── */
+[data-component="dropdown-content"],
+[data-component="context-menu-content"],
+.mimo-menu {
+  border-radius: var(--mimo-radius) !important;
+  border: 1px solid var(--border-weak-base, rgba(0, 0, 0, 0.06)) !important;
+  box-shadow: var(--mimo-shadow-float) !important;
+  overflow: hidden !important;
+}
+[data-component="dropdown-item"]:hover,
+[data-component="context-menu-item"]:hover,
+.mimo-menu-item:hover {
+  border-radius: var(--mimo-radius-xs) !important;
+}
+
+/* ─── Code Blocks ─────────────────────────────────────────────────────────── */
+[data-component="code-block"],
+.mimo-code-block {
+  border-radius: var(--mimo-radius-sm) !important;
+  border: 1px solid var(--border-weak-base, rgba(0, 0, 0, 0.06)) !important;
+}
+.dark [data-component="code-block"],
+.dark .mimo-code-block {
+  border-color: rgba(255, 255, 255, 0.04) !important;
+}
+
+/* ─── Tool / File Blocks ──────────────────────────────────────────────────── */
+[data-component="tool-result"],
+[data-component="file-card"],
+.mimo-tool-block {
+  border-radius: var(--mimo-radius-sm) !important;
+  border: 1px solid var(--border-weak-base, rgba(0, 0, 0, 0.05)) !important;
+  box-shadow: none !important;
+}
+
+/* ─── Titlebar area ───────────────────────────────────────────────────────── */
+[data-component="titlebar"],
+.mimo-titlebar {
+  border-bottom: 1px solid var(--border-weak-base, rgba(0, 0, 0, 0.05)) !important;
+  background: var(--background-base) !important;
+}
+
+/* ─── Selection highlight ─────────────────────────────────────────────────── */
+::selection {
+  background: rgba(245, 158, 11, 0.18) !important;
+}
+.dark ::selection {
+  background: rgba(245, 158, 11, 0.25) !important;
+}
+
+/* ─── Mimo Panel: shared shell ────────────────────────────────────────────── */
+.mimo-panel {
+  border-left: 1px solid var(--border-weak-base, rgba(0, 0, 0, 0.06));
+  background: var(--background-weak);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 260px;
+  max-width: 340px;
+  overflow: hidden;
+}
+.dark .mimo-panel {
+  border-left-color: rgba(255, 255, 255, 0.04);
+  background: rgba(255, 255, 255, 0.015);
+}
+.mimo-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px 10px;
+  border-bottom: 1px solid var(--border-weak-base, rgba(0, 0, 0, 0.05));
+}
+.dark .mimo-panel-header {
+  border-bottom-color: rgba(255, 255, 255, 0.04);
+}
+.mimo-panel-title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-weak);
+}
+.mimo-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 8px;
+}
+
+/* ─── Sub-Agent status badges ─────────────────────────────────────────────── */
+.mimo-agent-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 2px 8px;
+  border-radius: 99px;
+  font-size: 11px;
+  font-weight: 500;
+  line-height: 1.6;
+}
+.mimo-agent-badge--active {
+  background: rgba(74, 222, 128, 0.12);
+  color: #16a34a;
+}
+.dark .mimo-agent-badge--active {
+  background: rgba(74, 222, 128, 0.1);
+  color: #4ade80;
+}
+.mimo-agent-badge--waiting {
+  background: rgba(245, 158, 11, 0.1);
+  color: #b45309;
+}
+.dark .mimo-agent-badge--waiting {
+  background: rgba(251, 191, 36, 0.1);
+  color: #fbbf24;
+}
+.mimo-agent-badge--idle {
+  background: var(--surface-base);
+  color: var(--text-weak);
+}
+.mimo-agent-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.mimo-agent-dot--pulse {
+  animation: mimo-pulse 1.8s ease-in-out infinite;
+}
+@keyframes mimo-pulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+
+/* ─── Goal / Loop progress track ─────────────────────────────────────────── */
+.mimo-goal-track {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 8px 0;
+}
+.mimo-goal-step {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: var(--mimo-radius-xs);
+  transition: background var(--mimo-transition);
+}
+.mimo-goal-step:hover {
+  background: var(--surface-base);
+}
+.mimo-goal-step-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  padding-top: 3px;
+}
+.mimo-goal-step-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 1.5px solid var(--border-base);
+  background: transparent;
+  flex-shrink: 0;
+}
+.mimo-goal-step-dot--done {
+  background: var(--success, #4ade80);
+  border-color: var(--success, #4ade80);
+}
+.mimo-goal-step-dot--active {
+  background: var(--primary, #f59e0b);
+  border-color: var(--primary, #f59e0b);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.2);
+}
+.mimo-goal-step-line {
+  width: 1.5px;
+  flex: 1;
+  min-height: 12px;
+  background: var(--border-weak-base, rgba(0, 0, 0, 0.07));
+  margin-top: 3px;
+}
+.dark .mimo-goal-step-line {
+  background: rgba(255, 255, 255, 0.05);
+}
+.mimo-goal-step-label {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--text-base);
+  flex: 1;
+}
+.mimo-goal-step-label--weak {
+  color: var(--text-weak);
+}
+
+/* ─── Memory items ────────────────────────────────────────────────────────── */
+.mimo-memory-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: var(--mimo-radius-sm);
+  border: 1px solid transparent;
+  transition:
+    border-color var(--mimo-transition),
+    background var(--mimo-transition);
+  margin-bottom: 4px;
+  cursor: default;
+}
+.mimo-memory-item:hover {
+  background: var(--surface-base);
+  border-color: var(--border-weak-base, rgba(0, 0, 0, 0.06));
+}
+.dark .mimo-memory-item:hover {
+  border-color: rgba(255, 255, 255, 0.04);
+}
+.mimo-memory-item-content {
+  flex: 1;
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--text-base);
+  word-break: break-word;
+}
+.mimo-memory-item-tag {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-weak);
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: var(--surface-base);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.mimo-memory-actions {
+  display: flex;
+  gap: 4px;
+  opacity: 0;
+  transition: opacity var(--mimo-transition);
+}
+.mimo-memory-item:hover .mimo-memory-actions {
+  opacity: 1;
+}
+
+/* ─── Empty states ────────────────────────────────────────────────────────── */
+.mimo-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 32px 16px;
+  color: var(--text-weak);
+  font-size: 12px;
+  text-align: center;
+}
+.mimo-empty-state-icon {
+  font-size: 20px;
+  opacity: 0.4;
+}
+
+/* ─── Dream/Distill cycle indicator ──────────────────────────────────────── */
+.mimo-cycle-ring {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid var(--border-weak-base, rgba(0, 0, 0, 0.08));
+  border-top-color: var(--primary, #f59e0b);
+  animation: mimo-spin 1.2s linear infinite;
+  flex-shrink: 0;
+}
+@keyframes mimo-spin {
+  to { transform: rotate(360deg); }
+}
+.mimo-cycle-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  border-radius: 99px;
+  border: 1px solid var(--border-weak-base, rgba(0, 0, 0, 0.06));
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--text-base);
+  background: var(--background-strong);
+  box-shadow: var(--mimo-shadow-subtle);
+}
+
+/* ─── Workflow Canvas ─────────────────────────────────────────────────────── */
+.mimo-workflow-canvas {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  background:
+    radial-gradient(circle, rgba(128, 128, 128, 0.06) 1px, transparent 1px);
+  background-size: 20px 20px;
+  overflow: hidden;
+}
+.mimo-workflow-canvas svg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 1;
+}
+.mimo-workflow-node {
+  position: absolute;
+  min-width: 120px;
+  border-radius: 10px;
+  border: 1px solid var(--border-weak-base, rgba(0, 0, 0, 0.08));
+  background: var(--background-strong, #fff);
+  box-shadow: var(--mimo-shadow-subtle);
+  cursor: grab;
+  transition:
+    box-shadow var(--mimo-transition),
+    border-color var(--mimo-transition);
+  z-index: 2;
+  user-select: none;
+}
+.mimo-workflow-node:hover {
+  box-shadow: var(--mimo-shadow-float);
+  border-color: var(--border-base, rgba(0, 0, 0, 0.12));
+}
+.mimo-workflow-node--selected {
+  border-color: var(--primary, #f59e0b);
+  box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.15), var(--mimo-shadow-float);
+}
+.mimo-workflow-port {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  border: 2px solid var(--border-base);
+  background: var(--background-strong);
+  position: absolute;
+  z-index: 3;
+  transition:
+    background var(--mimo-transition),
+    transform var(--mimo-transition);
+}
+.mimo-workflow-port:hover {
+  background: var(--primary, #f59e0b);
+  transform: scale(1.4);
+}
+.mimo-workflow-port--output {
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.mimo-workflow-port--output:hover {
+  transform: translateX(-50%) scale(1.4);
+}
+.mimo-workflow-port--input {
+  top: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+.mimo-workflow-port--input:hover {
+  transform: translateX(-50%) scale(1.4);
+}
+
+/* ─── Score Rings ──────────────────────────────────────────────────────────── */
+.mimo-score-ring {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.mimo-score-ring svg {
+  transform: rotate(-90deg);
+}
+.mimo-score-ring-label {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+/* ─── Capability bars ──────────────────────────────────────────────────────── */
+.mimo-capability-bar {
+  height: 6px;
+  border-radius: 99px;
+  background: var(--border-weak-base, rgba(0, 0, 0, 0.06));
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.mimo-capability-bar-fill {
+  height: 100%;
+  border-radius: 99px;
+  transition: width 600ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ─── Dream phase ring ────────────────────────────────────────────────────── */
+.mimo-dream-phase {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.mimo-dream-phase-glow {
+  position: absolute;
+  inset: -16px;
+  border-radius: 50%;
+  opacity: 0;
+  transition: opacity 400ms ease;
+}
+.mimo-dream-phase--running .mimo-dream-phase-glow {
+  opacity: 1;
+  animation: mimo-dream-pulse 2s ease-in-out infinite;
+}
+@keyframes mimo-dream-pulse {
+  0%, 100% { opacity: 0.3; transform: scale(0.95); }
+  50% { opacity: 0.6; transform: scale(1.05); }
+}
+
+/* ─── Personalization toggle ──────────────────────────────────────────────── */
+.mimo-toggle {
+  position: relative;
+  width: 32px;
+  height: 18px;
+  border-radius: 99px;
+  border: none;
+  cursor: pointer;
+  transition: background var(--mimo-transition);
+}
+.mimo-toggle-knob {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  transition: transform var(--mimo-transition);
+}
+.mimo-toggle--on .mimo-toggle-knob {
+  transform: translateX(14px);
+}
+
+/* ─── Activity heatmap ────────────────────────────────────────────────────── */
+.mimo-heatmap-cell {
+  border-radius: 2px;
+  transition:
+    background var(--mimo-transition),
+    transform var(--mimo-transition);
+}
+.mimo-heatmap-cell:hover {
+  transform: scale(1.3);
+  z-index: 1;
+}
+
+/* ─── Tab bar (Mimo Hub) ─────────────────────────────────────────────────── */
+.mimo-tab-bar {
+  display: flex;
+  border-bottom: 1px solid var(--border-weak-base, rgba(0, 0, 0, 0.06));
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.mimo-tab-bar::-webkit-scrollbar {
+  display: none;
+}
+.mimo-tab-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 8px 0;
+  min-width: 0;
+  border-bottom: 2px solid transparent;
+  transition:
+    color var(--mimo-transition),
+    background var(--mimo-transition),
+    border-color var(--mimo-transition);
+}
+.mimo-tab-item:hover {
+  background: var(--surface-base);
+}
+.mimo-tab-item--active {
+  background: var(--surface-base);
+}
+
+/* ─── Issue list (Code Review) ────────────────────────────────────────────── */
+.mimo-issue-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: var(--mimo-radius-xs);
+  transition: background var(--mimo-transition);
+}
+.mimo-issue-row:hover {
+  background: var(--surface-base);
+}
+.mimo-issue-severity-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  margin-top: 5px;
+  flex-shrink: 0;
+}
+
+/* ─── File change bar ─────────────────────────────────────────────────────── */
+.mimo-file-change-bar {
+  display: flex;
+  height: 8px;
+  border-radius: 4px;
+  overflow: hidden;
+  background: var(--border-weak-base, rgba(0, 0, 0, 0.04));
+}
+.mimo-file-change-bar-add {
+  height: 100%;
+  background: rgba(74, 222, 128, 0.6);
+}
+.mimo-file-change-bar-del {
+  height: 100%;
+  background: rgba(248, 113, 113, 0.6);
+}
+
+/* ─── Glass morphism overlay ──────────────────────────────────────────────── */
+.mimo-glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.dark .mimo-glass {
+  background: rgba(0, 0, 0, 0.5);
+}
+
+/* ─── Animated gradient shimmer ───────────────────────────────────────────── */
+.mimo-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(245, 158, 11, 0.08) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: mimo-shimmer 2s linear infinite;
+}
+@keyframes mimo-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

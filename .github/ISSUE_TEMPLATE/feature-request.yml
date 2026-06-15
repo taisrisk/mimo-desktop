@@ -1,0 +1,27 @@
+name: Feature Request
+description: Suggest a feature or enhancement for Mimo Desktop
+labels: [enhancement]
+title: "[FEATURE]: "
+
+body:
+  - type: checkboxes
+    id: verified
+    attributes:
+      label: Verify this hasn't been requested before
+      options:
+        - label: I have checked existing issues and this feature hasn't been requested.
+          required: true
+
+  - type: textarea
+    attributes:
+      label: Describe the feature
+      description: What do you want to add or change? What problem does it solve?
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Alternatives considered
+      description: Have you considered any alternative solutions?
+    validations:
+      required: false

@@ -60,7 +60,7 @@ const getBase = (): Configuration => ({
   win: {
     icon: `resources/icons/icon.ico`,
     signAndEditExecutable: false,
-    target: ["nsis"],
+    target: ["nsis", "zip"],
   },
   nsis: {
     oneClick: false,

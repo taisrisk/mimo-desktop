@@ -15,12 +15,12 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
-            platform: linux
           - os: windows-latest
             platform: win
           - os: macos-latest
             platform: mac
+          - os: ubuntu-latest
+            platform: linux
 
     steps:
       - name: Checkout
@@ -29,28 +29,32 @@ jobs:
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
         with:
-          bun-version: 1.3.11
+          bun-version: 1.3.14
 
       - name: Install dependencies
-        run: bun install
+        run: bun install --ignore-scripts
 
       - name: Build desktop
         run: bun run build:desktop
+        env:
+          MIMO_CHANNEL: prod
 
       - name: Package
         run: bun --cwd packages/desktop package:${{ matrix.platform }}
         env:
+          MIMO_CHANNEL: prod
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Upload release assets
         uses: softprops/action-gh-release@v2
         with:
           files: |
-            packages/desktop/dist/*.dmg
-            packages/desktop/dist/*.zip
             packages/desktop/dist/*.exe
+            packages/desktop/dist/*.zip
+            packages/desktop/dist/*.dmg
             packages/desktop/dist/*.AppImage
             packages/desktop/dist/*.deb
             packages/desktop/dist/*.rpm
           draft: false
           prerelease: false
+          generate_release_notes: true

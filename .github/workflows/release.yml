@@ -52,12 +52,16 @@ jobs:
         env:
           MIMO_CHANNEL: prod
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          # Set APPLE_ID in repo secrets to enable notarization
+          # Set APPLE_ID + CSC_LINK in repo secrets to enable signing/notarization
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          CSC_LINK: ${{ secrets.CSC_LINK }}
-          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD }}
+          # Only pass CSC_LINK when the secret actually exists — an empty string is
+          # resolved as the project directory by electron-builder, causing a build error
+          CSC_LINK: ${{ secrets.CSC_LINK || '' }}
+          CSC_KEY_PASSWORD: ${{ secrets.CSC_KEY_PASSWORD || '' }}
+          # Skip auto-discovery of signing identity when no cert is configured
+          CSC_IDENTITY_AUTO_DISCOVERY: ${{ secrets.CSC_LINK != '' && 'true' || 'false' }}
 
       - name: Package (Linux)
         if: matrix.platform == 'linux'

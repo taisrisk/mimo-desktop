@@ -26,8 +26,11 @@ const channel = (() => {
   return "dev"
 })()
 
+const hasCert = !!process.env.CSC_LINK
+
 const getBase = (): Configuration => ({
   artifactName: "mimo-desktop-${os}-${arch}.${ext}",
+  executableName: "mimo-desktop",
   directories: {
     output: "dist",
     buildResources: "resources",
@@ -43,15 +46,16 @@ const getBase = (): Configuration => ({
   mac: {
     category: "public.app-category.developer-tools",
     icon: `resources/icons/icon.icns`,
-    hardenedRuntime: true,
+    hardenedRuntime: hasCert,
     gatekeeperAssess: false,
-    entitlements: "resources/entitlements.plist",
-    entitlementsInherit: "resources/entitlements.plist",
+    entitlements: hasCert ? "resources/entitlements.plist" : undefined,
+    entitlementsInherit: hasCert ? "resources/entitlements.plist" : undefined,
     notarize: process.env.APPLE_ID ? true : false,
+    identity: hasCert ? undefined : null,
     target: ["dmg", "zip"],
   },
   dmg: {
-    sign: true,
+    sign: hasCert,
   },
   protocols: {
     name: "Mimo Desktop",
@@ -69,6 +73,7 @@ const getBase = (): Configuration => ({
     installerHeaderIcon: `resources/icons/icon.ico`,
   },
   linux: {
+    executableName: "mimo-desktop",
     icon: `resources/icons`,
     category: "Development",
     target: ["AppImage", "deb", "rpm"],

@@ -395,7 +395,12 @@ export const SettingsKeybinds: Component = () => {
               class="flex-1"
             />
             <Show when={store.filter}>
-              <IconButton icon="circle-x" variant="ghost" onClick={() => setStore("filter", "")} />
+              <IconButton
+                icon="circle-x"
+                variant="ghost"
+                onClick={() => setStore("filter", "")}
+                aria-label={language.t("dialog.server.default.clear")}
+              />
             </Show>
           </div>
         </div>

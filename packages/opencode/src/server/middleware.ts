@@ -30,7 +30,8 @@ export const ErrorMiddleware: ErrorHandler = (err, c) => {
     return c.json(new NamedError.Unknown({ message: err.message }).toObject(), { status: 409 })
   }
   if (err instanceof HTTPException) return err.getResponse()
-  const message = err instanceof Error && err.stack ? err.stack : err.toString()
+  // Prevent stack trace leak to client
+  const message = err instanceof Error ? err.message : err.toString()
   return c.json(new NamedError.Unknown({ message }).toObject(), {
     status: 500,
   })

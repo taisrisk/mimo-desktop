@@ -9,6 +9,15 @@ import type { Event } from "electron"
 import { app, BrowserWindow, dialog } from "electron"
 import pkg from "electron-updater"
 
+// Surface unhandled rejections so they appear in logs instead of silently killing the process
+process.on("unhandledRejection", (reason) => {
+  try {
+    const log = (globalThis as any).__mimoLogger
+    if (log) log.error("unhandledRejection", reason)
+    else console.error("[mimo] unhandledRejection:", reason)
+  } catch {}
+})
+
 import contextMenu from "electron-context-menu"
 contextMenu({ showSaveImageAs: true, showLookUpSelection: false, showSearchWithGoogle: false })
 
@@ -65,6 +74,8 @@ const pendingDeepLinks: string[] = []
 
 const serverReady = defer<ServerReadyData>()
 const logger = initLogging()
+// Make logger available to the unhandledRejection handler above
+;(globalThis as any).__mimoLogger = logger
 
 logger.log("app starting", {
   version: app.getVersion(),
@@ -117,7 +128,19 @@ function setupApp() {
     registerRendererProtocol()
     setDockIcon()
     setupAutoUpdater()
-    await initialize()
+    try {
+      await initialize()
+    } catch (err) {
+      logger.error("initialize() failed", err)
+      await dialog.showMessageBox({
+        type: "error",
+        title: "Mimo Desktop — Startup Error",
+        message: String(err instanceof Error ? err.message : err),
+        detail: err instanceof Error ? err.stack ?? "" : "",
+        buttons: ["Quit"],
+      })
+      app.exit(1)
+    }
   })
 }
 
@@ -326,7 +349,9 @@ async function getSidecarPort() {
 function sqliteFileExists() {
   const xdg = process.env.XDG_DATA_HOME
   const base = xdg && xdg.length > 0 ? xdg : join(homedir(), ".local", "share")
-  return existsSync(join(base, "mimo", "mimo.db"))
+  // "mimocode" matches the APP constant in packages/shared/src/global.ts
+  // "mimocode.db" matches getChannelPath() for prod/beta/latest channels
+  return existsSync(join(base, "mimocode", "mimocode.db"))
 }
 
 function setupAutoUpdater() {

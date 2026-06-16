@@ -18,6 +18,15 @@ process.on("unhandledRejection", (reason) => {
   } catch {}
 })
 
+// Surface synchronous uncaught exceptions — these kill Electron silently without this handler
+process.on("uncaughtException", (err) => {
+  try {
+    const log = (globalThis as any).__mimoLogger
+    if (log) log.error("uncaughtException", err)
+    else console.error("[mimo] uncaughtException:", err)
+  } catch {}
+})
+
 import contextMenu from "electron-context-menu"
 contextMenu({ showSaveImageAs: true, showLookUpSelection: false, showSearchWithGoogle: false })
 
@@ -88,10 +97,13 @@ function setupApp() {
   ensureLoopbackNoProxy()
   app.commandLine.appendSwitch("proxy-bypass-list", "<-loopback>")
 
+  logger.log("requesting single instance lock")
   if (!app.requestSingleInstanceLock()) {
+    logger.warn("another instance is already running — quitting")
     app.quit()
     return
   }
+  logger.log("single instance lock acquired")
 
   app.on("second-instance", (_event: Event, argv: string[]) => {
     const urls = argv.filter((arg: string) => arg.startsWith("mimodesktop://"))
@@ -124,10 +136,14 @@ function setupApp() {
   }
 
   void app.whenReady().then(async () => {
+    logger.log("app ready — running startup sequence")
     app.setAsDefaultProtocolClient("mimodesktop")
+    logger.log("protocol client registered")
     registerRendererProtocol()
+    logger.log("renderer protocol registered")
     setDockIcon()
     setupAutoUpdater()
+    logger.log("starting initialize()")
     try {
       await initialize()
     } catch (err) {
@@ -163,11 +179,15 @@ function setInitStep(step: InitStep) {
 }
 
 async function initialize() {
+  logger.log("initialize() entered")
   const needsMigration = !sqliteFileExists()
+  logger.log("migration check", { needsMigration })
   const sqliteDone = needsMigration ? defer<void>() : undefined
   let overlay: BrowserWindow | null = null
 
+  logger.log("finding free port")
   const port = await getSidecarPort()
+  logger.log("got port", { port })
   const hostname = "127.0.0.1"
   const url = `http://${hostname}:${port}`
   const password = randomUUID()

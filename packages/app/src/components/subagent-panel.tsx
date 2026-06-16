@@ -3,7 +3,7 @@
  * Real-time visual hierarchy of active sub-agents: their assignments,
  * status, and communication links.
  */
-import { createSignal, For, Show, createMemo } from "solid-js"
+import { createSignal, For, Show, createMemo, onCleanup, onMount } from "solid-js"
 
 export type AgentStatus = "active" | "waiting" | "idle" | "done" | "error"
 
@@ -41,7 +41,19 @@ function elapsed(ms: number): string {
 
 export function SubAgentPanel(props: Props) {
   const [now, setNow] = createSignal(Date.now())
-  const interval = setInterval(() => setNow(Date.now()), 1000)
+  let interval: ReturnType<typeof setInterval>
+
+  // ⚡ Bolt: Memory Leak Fix
+  // Wrapping setInterval in onMount and explicitly cleaning it up in onCleanup
+  // prevents multiple intervals from accumulating when the component is repeatedly mounted/unmounted.
+  // This reduces unnecessary background CPU usage and eliminates a memory leak over time.
+  onMount(() => {
+    interval = setInterval(() => setNow(Date.now()), 1000)
+  })
+
+  onCleanup(() => {
+    clearInterval(interval)
+  })
 
   const agents = () => props.agents ?? DEMO_AGENTS
 

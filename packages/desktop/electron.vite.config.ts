@@ -43,10 +43,6 @@ export default defineConfig({
       alias: {
         "@/": path.resolve(__dirname, "../opencode/src/") + "/",
         "@tui/": path.resolve(__dirname, "../opencode/src/cli/cmd/tui/") + "/",
-        // bun:sqlite is not available in Electron's Node.js runtime.
-        // Redirect all drizzle-orm/bun-sqlite imports to the Node.js equivalents.
-        "drizzle-orm/bun-sqlite/migrator": "drizzle-orm/node-sqlite/migrator",
-        "drizzle-orm/bun-sqlite": "drizzle-orm/node-sqlite",
       },
     },
     build: {
@@ -61,6 +57,19 @@ export default defineConfig({
         enforce: "pre",
         resolveId(s) {
           if (s === "@lydell/node-pty") return nodePtyPkg
+        },
+      },
+      {
+        // bun:sqlite is not available in Electron's Node.js runtime.
+        // Intercept drizzle-orm/bun-sqlite* before externalizeDeps sees them
+        // and redirect to the Node.js-compatible equivalents.
+        name: "mimo:bun-sqlite-to-node-sqlite",
+        enforce: "pre",
+        resolveId(id) {
+          if (id.startsWith("drizzle-orm/bun-sqlite")) {
+            return { id: id.replace("drizzle-orm/bun-sqlite", "drizzle-orm/node-sqlite"), external: true }
+          }
+          return null
         },
       },
       {

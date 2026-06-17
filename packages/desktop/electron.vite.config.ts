@@ -43,6 +43,10 @@ export default defineConfig({
       alias: {
         "@/": path.resolve(__dirname, "../opencode/src/") + "/",
         "@tui/": path.resolve(__dirname, "../opencode/src/cli/cmd/tui/") + "/",
+        // bun:sqlite is not available in Electron's Node.js runtime.
+        // Redirect all drizzle-orm/bun-sqlite imports to the Node.js equivalents.
+        "drizzle-orm/bun-sqlite/migrator": "drizzle-orm/node-sqlite/migrator",
+        "drizzle-orm/bun-sqlite": "drizzle-orm/node-sqlite",
       },
     },
     build: {

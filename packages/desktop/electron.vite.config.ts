@@ -40,6 +40,10 @@ export default defineConfig({
       OPENCODE_CHANNEL: JSON.stringify(opencodeConstants.channel),
     },
     resolve: {
+      // #db, #pty, #hono in opencode's package.json "imports" map to bun/node/default
+      // variants. Without "node" here, Vite's resolver falls through to "default",
+      // which is the bun.ts variant (imports bun:sqlite) — breaks at runtime in Electron.
+      conditions: ["node"],
       alias: {
         "@/": path.resolve(__dirname, "../opencode/src/") + "/",
         "@tui/": path.resolve(__dirname, "../opencode/src/cli/cmd/tui/") + "/",

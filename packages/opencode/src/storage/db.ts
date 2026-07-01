@@ -1,5 +1,3 @@
-import { type SQLiteBunDatabase } from "drizzle-orm/bun-sqlite"
-import { migrate } from "drizzle-orm/bun-sqlite/migrator"
 import { type SQLiteTransaction } from "drizzle-orm/sqlite-core"
 export * from "drizzle-orm"
 import { LocalContext } from "../util"
@@ -14,7 +12,7 @@ import { Flag } from "../flag/flag"
 import { InstallationChannel } from "../installation/version"
 import { InstanceState } from "@/effect"
 import { iife } from "@/util/iife"
-import { init } from "#db"
+import { init, migrate, type Client as DbClient } from "#db"
 
 declare const OPENCODE_MIGRATIONS: { sql: string; timestamp: number; name: string }[] | undefined
 
@@ -44,7 +42,7 @@ export const Path = iife(() => {
 
 export type Transaction = SQLiteTransaction<"sync", void>
 
-type Client = SQLiteBunDatabase
+type Client = DbClient
 
 type Journal = { sql: string; timestamp: number; name: string }[]
 

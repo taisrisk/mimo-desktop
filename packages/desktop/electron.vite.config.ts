@@ -126,6 +126,43 @@ export default defineConfig({
         },
       },
       {
+        // bundle.macro.ts is meant to run as a Bun build-time macro that inlines
+        // the compose skills directory into the output. Rollup doesn't understand
+        // Bun's `with: { type: "macro" }` attribute, so without this plugin the
+        // real function body ships as-is and tries (and fails) to read the
+        // skills directory off disk at runtime, in an Electron build that never
+        // shipped those files. Read the directory here, at Vite build time, and
+        // inline the result the same way Bun's macro would.
+        name: "mimo:compose-bundle-macro",
+        enforce: "pre",
+        async load(id) {
+          if (!id.replace(/\\/g, "/").endsWith("skill/compose/bundle.macro.ts")) return null
+          const bundleDir = path.join(path.dirname(id), ".bundle")
+
+          const walk = async (base: string, rel: string, out: Record<string, string>) => {
+            const fullPath = rel ? path.join(base, rel) : base
+            for (const entry of await fs.readdir(fullPath, { withFileTypes: true })) {
+              const relPath = rel ? `${rel}/${entry.name}` : entry.name
+              if (entry.isDirectory()) {
+                await walk(base, relPath, out)
+              } else {
+                out[relPath] = await fs.readFile(path.join(fullPath, entry.name), "utf8")
+              }
+            }
+          }
+
+          const result: Record<string, Record<string, string>> = {}
+          for (const entry of await fs.readdir(bundleDir, { withFileTypes: true })) {
+            if (!entry.isDirectory()) continue
+            const files: Record<string, string> = {}
+            await walk(path.join(bundleDir, entry.name), "", files)
+            if (Object.keys(files).length > 0) result[entry.name] = files
+          }
+
+          return `export function loadComposeBundle() { return ${JSON.stringify(result)} }`
+        },
+      },
+      {
         name: "mimo:copy-server-assets",
         async writeBundle() {
           for (const l of await fs.readdir(MIMO_SERVER_DIST)) {

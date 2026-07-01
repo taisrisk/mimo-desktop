@@ -10,19 +10,19 @@ import { loadComposeBundle } from "./bundle.macro" with { type: "macro" }
 import { loadComposeBundle as loadComposeBundleDev } from "./bundle.macro"
 import { fallbackSanitization } from "@/config/markdown"
 
-/// Bun macros only resolve in the static import graph of an entry point.
-/// In dynamic import() chains (e.g. plugin tests), the macro is unavailable —
-/// fall back to a normal runtime import of the same function.
-/// `typeof loadComposeBundle` is always "undefined" even after macro expansion
-/// (Bun replaces the call site, not the binding), so use try/catch instead.
+/// Bun macros only resolve in the static import graph of an entry point built
+/// by Bun's own bundler. Anywhere else — dynamic import() chains, or a bundler
+/// that isn't Bun at all (e.g. Vite/Rollup for the Electron build) — the macro
+/// never expands, so calling it runs the real function body at runtime, where
+/// Bun-only APIs like `import.meta.dir` are undefined. That surfaces as
+/// different error types depending on how it fails (ReferenceError, or a
+/// TypeError from passing undefined into path.resolve), so fall back on any
+/// failure rather than matching a specific error class.
 function safeLoadComposeBundle() {
   try {
     return loadComposeBundle()
-  } catch(e) {
-    if (e instanceof ReferenceError) {
-      return loadComposeBundleDev()
-    }
-    throw e
+  } catch {
+    return loadComposeBundleDev()
   }
 }
 const COMPOSE_BUNDLE = safeLoadComposeBundle()

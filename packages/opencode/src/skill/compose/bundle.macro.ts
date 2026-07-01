@@ -1,5 +1,14 @@
 import fs from "fs"
 import path from "path"
+import { fileURLToPath } from "url"
+
+// import.meta.dir is Bun-only. When this file is bundled by Bun as a macro,
+// the call site is replaced at build time so this line never actually runs.
+// When bundled by a non-Bun bundler (Vite/Rollup for the Electron build), the
+// macro attribute is ignored, this file runs as a normal module at runtime,
+// and import.meta.dir is undefined — so derive the same directory from
+// import.meta.url instead, which both Bun and Node support.
+const moduleDir = typeof import.meta.dir === "string" ? import.meta.dir : path.dirname(fileURLToPath(import.meta.url))
 
 function walkDir(base: string, rel: string, out: Record<string, string>) {
   const fullPath = rel ? path.join(base, rel) : base
@@ -14,7 +23,7 @@ function walkDir(base: string, rel: string, out: Record<string, string>) {
 }
 
 export function loadComposeBundle(): Record<string, Record<string, string>> {
-  const dir = path.resolve(import.meta.dir, ".bundle")
+  const dir = path.resolve(moduleDir, ".bundle")
   const result: Record<string, Record<string, string>> = {}
 
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {

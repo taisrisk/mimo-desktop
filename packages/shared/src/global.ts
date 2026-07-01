@@ -40,12 +40,14 @@ export function resolveMimocodeHome(env: NodeJS.ProcessEnv = process.env): Resol
       state: path.join(home, "state"),
     }
   }
+  const mimoHome = path.join(os.homedir(), ".mimo")
   return {
-    mode: "xdg",
-    data: path.join(xdgData!, APP),
-    cache: path.join(xdgCache!, APP),
-    config: path.join(xdgConfig!, APP),
-    state: path.join(xdgState!, APP),
+    mode: "mimocode_home",
+    root: mimoHome,
+    data: path.join(mimoHome, "data"),
+    cache: path.join(mimoHome, "cache"),
+    config: path.join(mimoHome, "config"),
+    state: path.join(mimoHome, "state"),
   }
 }
 

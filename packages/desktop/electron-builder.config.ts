@@ -71,6 +71,11 @@ const getBase = (): Configuration => ({
     allowToChangeInstallationDirectory: true,
     installerIcon: `resources/icons/icon.ico`,
     installerHeaderIcon: `resources/icons/icon.ico`,
+    uninstallerIcon: `resources/icons/icon.ico`,
+    createStartMenuShortcut: true,
+    createDesktopShortcut: true,
+    runAfterFinish: true,
+    deleteAppDataOnUninstall: false,
   },
   linux: {
     executableName: "mimo-desktop",

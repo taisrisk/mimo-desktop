@@ -1,4 +1,5 @@
 import path from "path"
+import fs from "fs"
 import { xdgData, xdgCache, xdgConfig, xdgState } from "xdg-basedir"
 import os from "os"
 import { Context, Effect, Layer } from "effect"
@@ -40,6 +41,23 @@ export function resolveMimocodeHome(env: NodeJS.ProcessEnv = process.env): Resol
       state: path.join(home, "state"),
     }
   }
+  // An existing CLI install stores its data under XDG paths by default.
+  // Prefer that location if it already has real data, so the desktop app
+  // shares sessions/skills with an existing mimocode CLI install instead of
+  // pointing at an empty ~/.mimo. Only fresh installs (no XDG data yet) use
+  // ~/.mimo as the more discoverable default.
+  const xdgDataDir = path.join(xdgData!, APP)
+  const hasExistingXdgInstall = fs.existsSync(xdgDataDir) && fs.readdirSync(xdgDataDir).some((f) => f.endsWith(".db"))
+  if (hasExistingXdgInstall) {
+    return {
+      mode: "xdg",
+      data: xdgDataDir,
+      cache: path.join(xdgCache!, APP),
+      config: path.join(xdgConfig!, APP),
+      state: path.join(xdgState!, APP),
+    }
+  }
+
   const mimoHome = path.join(os.homedir(), ".mimo")
   return {
     mode: "mimocode_home",

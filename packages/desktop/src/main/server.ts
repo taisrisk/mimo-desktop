@@ -1,5 +1,3 @@
-import { homedir } from "node:os"
-import { join } from "node:path"
 import { app } from "electron"
 import { DEFAULT_SERVER_URL_KEY, WSL_ENABLED_KEY } from "./constants"
 import { getUserShell, loadShellEnv } from "./shell-env"
@@ -72,7 +70,6 @@ function prepareServerEnv(password: string) {
     MIMO_SERVER_USERNAME: "mimo",
     MIMO_SERVER_PASSWORD: password,
     XDG_STATE_HOME: app.getPath("userData"),
-    MIMOCODE_HOME: join(homedir(), ".mimo"),
   }
   Object.assign(process.env, env)
 }

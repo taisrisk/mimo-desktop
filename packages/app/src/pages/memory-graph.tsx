@@ -460,6 +460,7 @@ export default function MemoryGraph() {
           width: "220px",
           "border-color": "var(--color-border-weak-base)",
           background: "var(--color-background-surface-base)",
+          "backdrop-filter": "blur(20px)",
         }}
       >
         {/* Header */}
@@ -608,7 +609,7 @@ export default function MemoryGraph() {
       <div
         ref={containerRef!}
         class="flex-1 relative overflow-hidden"
-        style={{ cursor: "crosshair", background: "var(--color-background-base)" }}
+        style={{ cursor: "crosshair", background: "transparent" }}
         onMouseDown={e => {
           const node = getNodeAt(e.clientX, e.clientY)
           if (node) {
@@ -700,10 +701,11 @@ export default function MemoryGraph() {
                   onClick={() => setSelected(null)}
                 >
                   <svg viewBox="0 0 20 20" width="10" height="10" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round">
-                    <path d="M4 4l12 12M16 4L4 16" />
-                  </svg>
-                </button>
-              </div>
+              <path d="M4 4l12 12M16 4L4 16" />
+            </svg>
+          </button>
+        </div>
+
               <div
                 class="text-10-regular px-2 py-1 rounded-lg"
                 style={{ background: `${NODE_COLORS[node().type]}18`, color: NODE_COLORS[node().type] }}

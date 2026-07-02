@@ -1835,11 +1835,13 @@ export default function Layout(props: ParentProps) {
   )
 
   createEffect(() => {
-    const sidebarWidth = layout.sidebar.opened() ? layout.sidebar.width() : 48
+    const sidebarWidth = layout.sidebar.opened() ? layout.sidebar.width() : 64
     document.documentElement.style.setProperty("--dialog-left-margin", `${sidebarWidth}px`)
   })
 
-  const side = createMemo(() => Math.max(layout.sidebar.width(), 244))
+  // Sidebar: when closed the nav is a thin 64px icon rail; when opened it
+  // expands to show icon+text labels plus session/workspace content in one panel.
+  const side = createMemo(() => (layout.sidebar.opened() ? Math.max(layout.sidebar.width(), 200) + 16 : 64))
   const panel = createMemo(() => Math.max(side() - 64, 0))
 
   const loadedSessionDirs = new Set<string>()
@@ -2098,17 +2100,15 @@ export default function Layout(props: ParentProps) {
 
     return (
       <div
-        classList={{
-          "flex flex-col min-h-0 min-w-0 box-border rounded-tl-[12px] px-3": true,
-          "border border-b-0 border-border-weak-base": !merged(),
-          "border-l border-t border-border-weaker-base": merged(),
-          "bg-background-base": merged() || hover(),
-          "bg-background-stronger": !merged() && !hover(),
-          "flex-1 min-w-0": panelProps.mobile,
-          "max-w-full overflow-hidden": panelProps.mobile,
-        }}
         style={{
-          width: panelProps.mobile ? undefined : `${panel()}px`,
+          display: "flex",
+          "flex-direction": "column",
+          height: "100%",
+          "min-height": 0,
+          "min-width": 0,
+          "box-sizing": "border-box",
+          padding: "0 12px",
+          background: "transparent",
         }}
       >
         <Show
@@ -2363,6 +2363,7 @@ export default function Layout(props: ParentProps) {
     <SidebarContent
       mobile={mobile}
       opened={() => layout.sidebar.opened()}
+      onToggleOpened={() => layout.sidebar.toggle()}
       aimMove={aim.move}
       projects={projects}
       renderProject={(project) => (
@@ -2387,8 +2388,10 @@ export default function Layout(props: ParentProps) {
   )
 
   return (
-    <div class="relative bg-background-base flex-1 min-h-0 min-w-0 flex flex-col select-none [&_input]:select-text [&_textarea]:select-text [&_[contenteditable]]:select-text">
+    <div class="relative flex-1 min-h-0 min-w-0 flex flex-col select-none [&_input]:select-text [&_textarea]:select-text [&_[contenteditable]]:select-text" style="background:var(--helios-bg)">
       {autoselecting() ?? ""}
+      <div class="helios-glow-1" />
+      <div class="helios-glow-2" />
       <Titlebar />
       <div class="flex-1 min-h-0 min-w-0 flex">
         <div class="flex-1 min-h-0 relative">
@@ -2401,7 +2404,10 @@ export default function Layout(props: ParentProps) {
                 "absolute inset-y-0 left-0": true,
                 "z-10": true,
               }}
-              style={{ width: `${side()}px` }}
+              style={{
+                width: `${side()}px`,
+                padding: layout.sidebar.opened() ? "8px" : "0",
+              }}
               ref={(el) => {
                 setState("nav", el)
               }}
@@ -2427,7 +2433,7 @@ export default function Layout(props: ParentProps) {
                 <ResizeHandle
                   direction="horizontal"
                   size={layout.sidebar.width()}
-                  min={244}
+                  min={200}
                   max={typeof window === "undefined" ? 1000 : window.innerWidth * 0.3 + 64}
                   onResize={(w) => {
                     setState("sizing", true)
@@ -2478,13 +2484,14 @@ export default function Layout(props: ParentProps) {
                   !state.sizing,
               }}
               style={{
-                "--main-left": layout.sidebar.opened() ? `${side()}px` : "4rem",
+                "--main-left": `${side()}px`,
               }}
             >
               <main
                 classList={{
-                  "size-full overflow-x-hidden flex flex-col items-start contain-strict border-t border-border-weak-base bg-background-base xl:border-l xl:rounded-tl-[12px]": true,
+                  "size-full overflow-x-hidden flex flex-col items-start contain-strict": true,
                 }}
+                style="background:transparent;border-top:1px solid rgba(255,255,255,0.06);border-left:1px solid rgba(255,255,255,0.06);border-radius:12px 0 0 0"
               >
                 <Show when={!autoselecting.loading} fallback={<div class="size-full" />}>
                   {props.children}

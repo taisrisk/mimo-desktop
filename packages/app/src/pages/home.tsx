@@ -12,7 +12,6 @@ import { DialogSelectServer } from "@/components/dialog-select-server"
 import { useLanguage } from "@/context/language"
 
 // ─── Tokens ───────────────────────────────────────────────────────────────────
-const BG       = "#0d0d10"
 const CARD_BG  = "rgba(255,255,255,0.04)"
 const CARD_BDR = "rgba(255,255,255,0.08)"
 const TEXT_1   = "#ffffff"
@@ -171,13 +170,9 @@ export default function Home() {
   const MONTHS = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
 
   return (
-    <div style={{ background: BG, width: "100%", height: "100%", "overflow-y": "auto", position: "relative", "font-family": "'Inter', -apple-system, BlinkMacSystemFont, sans-serif" }}>
+    <div style={{ background: "transparent", width: "100%", height: "100%", "overflow-y": "auto", position: "relative", "font-family": "var(--helios-font)" }}>
 
-      {/* ── Background glow orbs ── */}
-      <div style={{ position: "fixed", top: "10%", left: "40%", width: "700px", height: "500px", background: "radial-gradient(ellipse, rgba(124,58,237,0.18) 0%, transparent 65%)", "pointer-events": "none", "z-index": 0 }} />
-      <div style={{ position: "fixed", bottom: "10%", right: "10%", width: "400px", height: "300px", background: "radial-gradient(ellipse, rgba(168,85,247,0.1) 0%, transparent 65%)", "pointer-events": "none", "z-index": 0 }} />
-
-      <div style={{ position: "relative", "z-index": 1, padding: "24px 28px", display: "flex", "flex-direction": "column", gap: "18px", "max-width": "1440px", margin: "0 auto" }}>
+      <div style={{ position: "relative", "z-index": 1, padding: "24px 32px", display: "flex", "flex-direction": "column", gap: "18px", "max-width": "1320px", margin: "0 auto" }}>
 
         {/* ══ HEADER ══════════════════════════════════════════════════════════ */}
         <div style={{ display: "flex", "align-items": "flex-start", "justify-content": "space-between" }}>
@@ -280,7 +275,7 @@ export default function Home() {
         </div>
 
         {/* ══ 3-COLUMN MAIN GRID ══════════════════════════════════════════════ */}
-        <div style={{ display: "grid", "grid-template-columns": "280px 1fr 280px", gap: "16px", "align-items": "start" }}>
+        <div style={{ display: "grid", "grid-template-columns": "300px 1fr 300px", gap: "16px", "align-items": "start" }}>
 
           {/* ── Col 1: Stat card + Promo card ── */}
           <div style={{ display: "flex", "flex-direction": "column", gap: "16px" }}>

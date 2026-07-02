@@ -206,24 +206,30 @@ export function SessionSidePanel(props: {
         aria-label={language.t("session.panel.reviewAndFiles")}
         aria-hidden={!open()}
         inert={!open()}
-        class="relative min-w-0 h-full flex shrink-0 overflow-hidden bg-background-base"
+        class="relative min-w-0 h-full flex shrink-0 overflow-hidden"
         classList={{
           "pointer-events-none": !open(),
           "transition-[width] duration-[240ms] ease-[cubic-bezier(0.22,1,0.36,1)] will-change-[width] motion-reduce:transition-none":
             !props.size.active() && !props.reviewSnap,
         }}
-        style={{ width: panelWidth() }}
+        style={{
+          width: panelWidth(),
+          background: "rgba(30,30,35,0.5)",
+          "backdrop-filter": "blur(16px)",
+          "-webkit-backdrop-filter": "blur(16px)",
+          "border-left": "1px solid rgba(255,255,255,0.06)",
+        }}
       >
-        <div class="size-full flex border-l border-border-weaker-base">
+        <div class="size-full flex" style={{ "border-left": "1px solid rgba(255,255,255,0.04)" }}>
           <div
             aria-hidden={!reviewOpen()}
             inert={!reviewOpen()}
-            class="relative min-w-0 h-full flex-1 overflow-hidden bg-background-base"
+            class="relative min-w-0 h-full flex-1 overflow-hidden"
             classList={{
               "pointer-events-none": !reviewOpen(),
             }}
           >
-            <div class="size-full min-w-0 h-full bg-background-base">
+            <div class="size-full min-w-0 h-full">
               <DragDropProvider
                 onDragStart={handleDragStart}
                 onDragEnd={handleDragEnd}

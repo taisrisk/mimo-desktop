@@ -1,5 +1,109 @@
 @import "@mimo-ai/ui/styles/tailwind";
 
+:root {
+  --helios-bg: #121214;
+  --helios-card: rgba(255,255,255,0.04);
+  --helios-card-hover: rgba(255,255,255,0.07);
+  --helios-bdr: rgba(255,255,255,0.08);
+  --helios-bdr-strong: rgba(255,255,255,0.12);
+  --helios-text: #ffffff;
+  --helios-text-2: rgba(255,255,255,0.55);
+  --helios-text-3: rgba(255,255,255,0.3);
+  --helios-purple: #c084fc;
+  --helios-purple-d: #7c3aed;
+  --helios-purple-glow: rgba(124,58,237,0.18);
+  --helios-purple-glow-strong: rgba(192,132,252,0.45);
+  --helios-green: #4ade80;
+  --helios-radius: 20px;
+  --helios-radius-sm: 12px;
+  --helios-radius-xs: 8px;
+  --helios-pill: 50px;
+  --helios-font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+html {
+  background: var(--helios-bg) !important;
+}
+
+body {
+  background: var(--helios-bg) !important;
+  font-family: var(--helios-font);
+}
+
+/* ── Background glow (applied via layout.tsx but referenced here) ── */
+.helios-glow-1 {
+  position: fixed;
+  top: -5%;
+  left: 30%;
+  width: 800px;
+  height: 600px;
+  background: radial-gradient(ellipse, var(--helios-purple-glow) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+.helios-glow-2 {
+  position: fixed;
+  bottom: -5%;
+  right: 5%;
+  width: 500px;
+  height: 400px;
+  background: radial-gradient(ellipse, rgba(168,85,247,0.12) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── Glassmorphic card mixin ── */
+.helios-card {
+  background: var(--helios-card);
+  border: 1px solid var(--helios-bdr);
+  border-radius: var(--helios-radius);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+.helios-card-sm {
+  background: var(--helios-card);
+  border: 1px solid var(--helios-bdr);
+  border-radius: var(--helios-radius-sm);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* ── Override theme variables for dark mode consistency ── */
+[data-color-scheme="dark"],
+[data-color-scheme="light"] {
+  --color-background-base: transparent !important;
+  --color-background-surface-base: var(--helios-card) !important;
+  --color-background-stronger: rgba(255,255,255,0.03) !important;
+  --color-background-raised-base: rgba(255,255,255,0.06) !important;
+  --color-surface-base: rgba(255,255,255,0.05) !important;
+  --color-border-weak-base: var(--helios-bdr) !important;
+  --color-border-weaker-base: rgba(255,255,255,0.05) !important;
+  --color-border-strong-base: var(--helios-bdr-strong) !important;
+  --color-text-base: var(--helios-text) !important;
+  --color-text-weak: var(--helios-text-2) !important;
+  --color-text-weaker: var(--helios-text-3) !important;
+  --color-text-strong: var(--helios-text) !important;
+}
+
+/* ── App background container ── */
+.helios-app-bg {
+  background: var(--helios-bg) !important;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Every page container is transparent so the body glow shows through ── */
+main,
+[data-component="page"],
+.page-content,
+[class*="helios-page"],
+[class*="memory-graph"],
+[class*="session-view"] {
+  background: transparent !important;
+}
+
 /* Smooth light/dark theme switching */
 html.theme-transitioning,
 html.theme-transitioning *,
@@ -10,7 +114,6 @@ html.theme-transitioning *::after {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1) !important;
 }
 
-/* Suppress transition on elements that should never animate (scroll, clip, transform) */
 html.theme-transitioning [style*="clip-path"],
 html.theme-transitioning [data-component="session-progress-bar"] {
   transition: none !important;
@@ -29,12 +132,10 @@ html.theme-transitioning [data-component="session-progress-bar"] {
       clip-path: inset(0 100% 0 0 round 999px);
       animation-timing-function: cubic-bezier(0.2, 0.8, 0.2, 1);
     }
-
     48% {
       clip-path: inset(0 0 0 0 round 999px);
       animation-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
     }
-
     100% {
       clip-path: inset(0 0 0 100% round 999px);
     }
@@ -72,7 +173,7 @@ html.theme-transitioning [data-component="session-progress-bar"] {
   [data-component="getting-started-actions"] {
     display: flex;
     flex-direction: column;
-    gap: 0.75rem; /* gap-3 */
+    gap: 0.75rem;
   }
 
   [data-component="getting-started-actions"] > [data-component="button"] {
@@ -84,18 +185,13 @@ html.theme-transitioning [data-component="session-progress-bar"] {
       flex-direction: row;
       align-items: center;
     }
-
     [data-component="getting-started-actions"] > [data-component="button"] {
       width: auto;
     }
   }
 
   @keyframes fade-in {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
+    from { opacity: 0; }
+    to { opacity: 1; }
   }
 }
